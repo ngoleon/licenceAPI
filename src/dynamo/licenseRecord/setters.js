@@ -143,17 +143,19 @@ module.exports.addProductLicense = async(params) => {
     const licenseProduct = await module.exports.updateLicenseData(input);
     console.info("Final License Product: ", licenseProduct);
 
-    await discord.updateDiscordRoles({
-        userId: params.userId,
-        roleId: params.roleId
-    });
+    if (params.instances > 0) {
+        await discord.updateDiscordRoles({
+            userId: params.userId,
+            roleId: params.roleId
+        });
 
-    await discord.sendDiscordUpdate({
-        expiry: expiryTime,
-        userId: params.userId,
-        licenseKey: params.licenseKey,
-        product: params.product
-    });
+        await discord.sendDiscordUpdate({
+            expiry: expiryTime,
+            userId: params.userId,
+            licenseKey: params.licenseKey,
+            product: params.product
+        });
+    }
 
     return licenseProduct;
 };
