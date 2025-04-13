@@ -1,0 +1,50 @@
+# Serverless Real Secrets
+serverless.yml
+
+# Node modules and lockfile
+node_modules/
+package-lock.json
+
+# Serverless build and deployment artifacts
+.serverless/
+.sls-next/
+
+# dotenv and config secrets
+.env
+.env.*
+*.secrets.*
+*.local
+*.config.js
+
+# OS & editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Compiled output (optional)
+dist/
+build/
+*.tsbuildinfo
+
+# Coverage/test files
+coverage/
+nyc_output/
+jest-output/
+
+# AWS credentials (if accidentally stored)
+.aws/
+*.pem
+*.key
+
+# Git garbage
+*.orig
+
+# VS Code workspace files
+*.code-workspace
