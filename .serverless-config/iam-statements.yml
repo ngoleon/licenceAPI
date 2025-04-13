@@ -1,0 +1,24 @@
+- Effect: Allow
+  Action:
+    - lambda:InvokeFunction
+  Resource: arn:aws:lambda:${aws:region}:${aws:accountId}:function:*
+
+- Effect: "Allow"
+  Action:
+    - "dynamodb:PutItem"
+    - "dynamodb:Get*"
+    - "dynamodb:Scan*"
+    - "dynamodb:UpdateItem"
+    - "dynamodb:DeleteItem"
+  Resource:
+    - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${param:dynamodbName}
+    - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${param:dynamodbLicenseName}
+
+- Effect: Allow
+  Action:
+    - sqs:SendMessage
+    - sqs:GetQueueAttributes
+    - sqs:GetQueueUrl
+  Resource:
+    - arn:aws:sqs:${aws:region}:${aws:accountId}:discord-event-queue
+    - arn:aws:sqs:${aws:region}:${aws:accountId}:discord-event-dlq

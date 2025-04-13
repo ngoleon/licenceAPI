@@ -1,0 +1,95 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: ngoleon
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: licence-api-demo
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: licence-api-demo
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ap-southeast-2
+  stackName: licence-api-demo
+  stage: dev
+  memorySize: 128
+  versionFunctions: false
+  architecture: arm64
+  httpApi:
+    shouldStartNameWithService: true
+    cors: true
+  iam:
+    role:
+      statements: ${file(./.serverless-config/iam-statements.yml)}
+  environment: ${file(./.serverless-config/environment.yml)}
+
+params:
+  default:
+    discordClientId: ""
+    discordClientSecret: ""
+    dynamodbName: userDataDemo
+    dynamodbLicenseName: licensesDemo
+    discordBotPublicKey: ""
+    demoGuildId: ""
+    demoRoleId: ""
+    demoToken: ""
+    demoAppId: ""
+    stripeSecretKey:
+    stripeTestKey:
+    stripeWebhookSecret: ""
+    stripeWebhookSecretTest: ""
+
+functions:
+  stripePayment:
+    handler: src/stripe/stripeUtils.paymentNotification
+    events:
+      - httpApi:
+          path: /process
+          method: POST
+
+  discordAccessToken:
+    handler: src/discord/discordOAuth.accessToken
+    events:
+      - httpApi:
+          method: POST
+          path: /website
+
+  getLicenseInfo:
+    handler: src/discord/discordOAuth.licenseInfo
+    events:
+      - httpApi:
+          method: POST
+          path: /userInfo
+
+  getDiscordUserInfo:
+    handler: src/discord/discordOAuth.userInfo
+    events:
+      - httpApi:
+          method: POST
+          path: /discordInfo
+
+  getProductPrice:
+    handler: src/stripe/stripeUtils.productInfo
+    events:
+      - httpApi:
+          method: POST
+          path: /productInfo
+
+  discordBotHandler:
+    handler: src/discord/discordBot.handler
+    events:
+      - httpApi:
+          method: POST
+          path: /discordBot
+
+  testPaymentHandler:
+    handler: src/stripe/paymentHandling.paymentHandler
+
+  stripeLink:
+    handler: src/stripe/stripeUtils.stripeLink
+    events:
+      - httpApi:
+          method: POST
+          path: /generateLink
+
+package:
+  individually: false

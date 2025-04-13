@@ -1,0 +1,18 @@
+﻿# File environment.yml
+
+DISCORD_CLIENT_ID: ${param:discordClientId}
+DISCORD_CLIENT_SECRET: ${param:discordClientSecret}
+
+DYNAMODB_CUSTOMER_TABLE: ${param:dynamodbName}
+DYNAMODB_LICENSE_TABLE: ${param:dynamodbLicenseName}
+
+DISCORD_BOT_PUBLIC_KEY: ${param:discordBotPublicKey}
+DISCORD_BOT_TOKEN: ${param:demoToken}
+DISCORD_BOT_GUILD_ID: ${param:demoGuildId}
+DISCORD_BOT_PREMIUM_ROLE_ID: ${param:demoRoleId}
+DISCORD_BOT_APP_ID: ${param:demoAppId}
+
+STRIPE_SECRET_KEY: ${param:stripeSecretKey}
+STRIPE_TEST_KEY: ${param:stripeTestKey}
+STRIPE_WEBHOOK_SECRET: ${param:stripeWebhookSecret}
+STRIPE_TEST_WEBHOOK_SECRET: ${param:stripeWebhookSecretTest}

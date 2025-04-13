@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stripe + Discord Test</title>
+</head>
+<body>
+  <h2>Buy Premium</h2>
+  <button id="buy">Login with Discord & Purchase</button>
+
+  <script>
+    const stripeLinkEndpoint = "https://kpjycajlwe.execute-api.ap-southeast-2.amazonaws.com/generateLink";
+    const discordTokenExchange = "https://kpjycajlwe.execute-api.ap-southeast-2.amazonaws.com/website";
+    const redirectUri = "http://localhost:3000/testStripe";
+
+    document.getElementById("buy").addEventListener("click", () => {
+      const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=1358691230078468116&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=identify%20email`;
+      window.location.href = discordAuthUrl;
+    });
+
+    window.onload = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+
+      if (code) {
+        try {
+          // Step 1: Exchange Discord code for access_token
+          const tokenRes = await fetch(discordTokenExchange, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code, redirectUri })
+          });
+
+          const tokenData = await tokenRes.json();
+          const token = tokenData.token;
+          if (!token) throw new Error("No Discord access token returned");
+
+          // Step 2: Request Stripe checkout link
+          const stripeRes = await fetch(stripeLinkEndpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              token,
+              product: "demo",
+              days: 30,
+              currency: "aud",
+              instances: 1,
+              redirectUri
+            })
+          });
+
+          const raw  = await stripeRes.text();
+          const stripeUrl = raw.replace(/^"|"$/g, ''); // remove outer quotes
+          if (stripeUrl.startsWith("https://")) {
+            window.location.href = stripeUrl;
+          } else {
+            alert("Stripe error: " + stripeUrl);
+          }
+        } catch (err) {
+          console.error("Stripe payment error:", err);
+          alert("Something went wrong: " + err.message);
+        }
+      }
+    };
+  </script>
+</body>
+</html>
