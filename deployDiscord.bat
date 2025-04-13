@@ -1,0 +1,1 @@
+node .\discord-deployment\deploy-commands.js
